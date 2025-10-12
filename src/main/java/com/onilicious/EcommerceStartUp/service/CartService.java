@@ -8,8 +8,8 @@ import com.onilicious.EcommerceStartUp.repository.CartRepository;
 import com.onilicious.EcommerceStartUp.repository.CartitemRepository;
 import com.onilicious.EcommerceStartUp.repository.ProductRepository;
 import com.onilicious.EcommerceStartUp.repository.UserRepository;
-import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional
