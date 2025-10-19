@@ -19,16 +19,6 @@ public class UserController {
     }
 
     /*
-     * Create user
-     */
-    @PostMapping("/register")
-    public ResponseEntity<User> createUser(@RequestBody User user) {
-        //@RequestBody will take JSON data from HTTP request body and convert it into a Java object and give it to the method
-        User newUser = userService.createUser(user);
-        return ResponseEntity.status(HttpStatus.CREATED).body(newUser);
-    }
-
-    /*
      * Get all users
      */
     @RequestMapping("/users")
@@ -42,6 +32,16 @@ public class UserController {
     @GetMapping("/{id}")
     public ResponseEntity<User> getUserById(@PathVariable("id") Long id) {
         return ResponseEntity.ok(userService.getUserById(id));
+    }
+
+    /*
+     * Create user
+     */
+    @PostMapping("/register")
+    public ResponseEntity<User> createUser(@RequestBody User user) {
+        //@RequestBody will take JSON data from HTTP request body and convert it into a Java object and give it to the method
+        User newUser = userService.createUser(user);
+        return ResponseEntity.status(HttpStatus.CREATED).body(newUser);
     }
 
     /*
