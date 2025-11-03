@@ -47,18 +47,40 @@ public class CartService {
     /*
      * Add a product to the user cart
      */
-    public Cart addProductToCart(Long userId, Long productId, int quantity) {
+    public Cart addItemToCart(Long userId, CartItem item) {
         Cart cart = getOrCreateCart(userId);
-        Product product = productRepo.findById(productId).orElseThrow(() -> new RuntimeException("Product not found"));
+        Product product = productRepo.findById(item.getProduct().getId()).orElseThrow(() -> new RuntimeException("Product not found"));
         CartItem existingItem = cartItemRepo.findByCartIdAndProductId(cart.getId(), product.getId());
 
         if(existingItem != null) {
-            existingItem.setQuantity(existingItem.getQuantity() + quantity);
+            existingItem.setQuantity(existingItem.getQuantity() + item.getQuantity());
             cartItemRepo.save(existingItem);
         } else {
             CartItem cartItem = new CartItem();
             cartItem.setCart(cart);
             cartItem.setProduct(product);
+            cartItem.setQuantity(item.getQuantity());
+            cartItemRepo.save(cartItem);
+        }
+
+        return cart;
+    }
+
+    /*
+     * Update quantity for a specific cart item
+     */
+    public Cart updateCartItem(Long userId, Long itemId, int quantity) {
+        Cart cart = getOrCreateCart(userId);
+
+        CartItem cartItem = cartItemRepo.findById(itemId).orElseThrow(() -> new RuntimeException("Cart item not found"));
+
+        if(!cartItem.getCart().getId().equals(cart.getId())) {
+            throw new RuntimeException("Cart item does not belong to user's cart");
+        }
+
+        if(quantity <= 0) {
+            cartItemRepo.delete(cartItem);
+        } else {
             cartItem.setQuantity(quantity);
             cartItemRepo.save(cartItem);
         }
@@ -69,13 +91,14 @@ public class CartService {
     /*
      * Remove a product to the user cart
      */
-    public void removeProductFromCart(Long userId, Long productId) {
+    public Cart removeItemFromCart(Long userId, Long productId) {
         Cart cart = getOrCreateCart(userId);
         CartItem cartItem = cartItemRepo.findByCartIdAndProductId(cart.getId(), productId);
 
         if(cartItem != null) {
             cartItemRepo.delete(cartItem);
         }
+        return cart;
     }
 
     /*
