@@ -1,5 +1,7 @@
 package com.onilicious.EcommerceStartUp.service;
 
+import com.onilicious.EcommerceStartUp.dto.OrderItemRequestDTO;
+import com.onilicious.EcommerceStartUp.dto.OrderRequestDTO;
 import com.onilicious.EcommerceStartUp.entity.Order;
 import com.onilicious.EcommerceStartUp.entity.OrderItem;
 import com.onilicious.EcommerceStartUp.entity.Product;
@@ -12,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -33,8 +36,27 @@ public class OrderService {
     /*
      * Create order
      */
-    public Order createOrder(Long userId, List<OrderItem> items) {
-        User user = userRepo.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+//    public Order createOrder(Long userId, List<OrderItem> items) {
+//        User user = userRepo.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+//
+//        Order order = new Order();
+//        order.setUser(user);
+//        order.setCreatedAt(LocalDateTime.now());
+//        order.setStatus("PENDING");
+//        order = orderRepo.save(order);
+//
+//        for(OrderItem item : items) {
+//            Product product = productRepo.findById(item.getProduct().getId()).orElseThrow(() -> new RuntimeException("Product not found"));
+//            item.setOrder(order);
+//            item.setProduct(product);
+//            orderItemRepo.save(item);
+//        }
+//
+//        order.setItems(items);
+//        return order;
+//    }
+    public Order createOrder(OrderRequestDTO request) {
+        User user = userRepo.findById(request.getUserId()).orElseThrow(() -> new RuntimeException("User not found"));
 
         Order order = new Order();
         order.setUser(user);
@@ -42,19 +64,36 @@ public class OrderService {
         order.setStatus("PENDING");
         order = orderRepo.save(order);
 
-        for(OrderItem item : items) {
-            Product product = productRepo.findById(item.getProduct().getId()).orElseThrow(() -> new RuntimeException("Product not found"));
-            item.setOrder(order);
-            item.setProduct(product);
-            orderItemRepo.save(item);
-        }
+        List<OrderItem> savedItems = new ArrayList<>();
+        if(request.getItems() != null) {
+            for(OrderItemRequestDTO itemReq : request.getItems()) {
+                Product product = productRepo.findById(itemReq.getProductId()).orElseThrow(() -> new RuntimeException("Product not found"));
 
-        order.setItems(items);
+                OrderItem item = new OrderItem();
+                item.setOrder(order);
+                item.setProduct(product);
+                if(itemReq.getQuantity() != null) {
+                    item.setQuantity(itemReq.getQuantity());
+                }
+
+                orderItemRepo.save(item);
+                savedItems.add(item);
+            }
+        }
+        order.setItems(savedItems);
         return order;
     }
 
     /*
-     * Get order details by ID
+     * Get order details by userId
+     */
+    @Transactional(readOnly = true)
+    public List<Order> getOrderByUserId(Long userId) {
+        return orderRepo.findByUserId(userId);
+    }
+
+    /*
+     * Get order details by orderId
      */
     @Transactional(readOnly = true)
     public Order getOrder(Long orderId) {
