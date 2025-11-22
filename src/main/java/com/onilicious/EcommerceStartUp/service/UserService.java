@@ -40,6 +40,7 @@ public class UserService {
         User existingUser = getUserById(id);
         existingUser.setUsername(updatedUser.getUsername());
         existingUser.setPasswordHash(updatedUser.getPasswordHash());
+        existingUser.setRole(updatedUser.getRole());
         return userRepo.save(existingUser);
     }
 

@@ -19,7 +19,7 @@ public class CartController {
     /*
      * Get cart by user
      */
-    @GetMapping("/{userId")
+    @GetMapping("/{userId}")
     public ResponseEntity<Cart> getCartByUser(@PathVariable Long userId) {
         Cart cart = cartService.getOrCreateCart(userId);
         return ResponseEntity.ok(cart);
