@@ -45,14 +45,14 @@ public class CheckoutService {
 
         Order order = new Order();
         order.setUser(user);
-        order.setStatus("Pending");
+        order.setStatus(OrderStatus.PENDING);
         order.setCreatedAt(LocalDateTime.now());
         order = orderRepo.save(order);
 
         for (CartItem cartItem : cartItems) {
             OrderItem orderItem = new OrderItem();
             orderItem.setOrder(order);
-            orderItem.setProduct(cartItem.getProduct());
+            orderItem.setProductId(cartItem.getProduct().getId());
             orderItem.setQuantity(cartItem.getQuantity());
             orderItem.setPriceAtPurchase(cartItem.getProduct().getPrice());
             orderItemRepo.save(orderItem);
