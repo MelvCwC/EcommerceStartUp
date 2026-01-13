@@ -1,6 +1,7 @@
 package com.onilicious.EcommerceStartUp.dto;
 
 import com.onilicious.EcommerceStartUp.entity.Order;
+import com.onilicious.EcommerceStartUp.entity.OrderStatus;
 import org.aspectj.weaver.ast.Or;
 
 import java.math.BigDecimal;
@@ -9,12 +10,12 @@ import java.time.LocalDateTime;
 public class OrderResponse {
     private Long id;
     private BigDecimal total;
-    private String status;
+    private OrderStatus status;
     private LocalDateTime createdAt;
 
     public OrderResponse() {};
 
-    public OrderResponse(Long id, BigDecimal total, String status, LocalDateTime createdAt) {
+    public OrderResponse(Long id, BigDecimal total, OrderStatus status, LocalDateTime createdAt) {
         this.id = id;
         this.total = total;
         this.status = status;
@@ -46,11 +47,11 @@ public class OrderResponse {
         this.total = total;
     }
 
-    public String getStatus() {
+    public OrderStatus getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(OrderStatus status) {
         this.status = status;
     }
 

@@ -2,10 +2,7 @@ package com.onilicious.EcommerceStartUp.service;
 
 import com.onilicious.EcommerceStartUp.dto.OrderItemRequestDTO;
 import com.onilicious.EcommerceStartUp.dto.OrderRequestDTO;
-import com.onilicious.EcommerceStartUp.entity.Order;
-import com.onilicious.EcommerceStartUp.entity.OrderItem;
-import com.onilicious.EcommerceStartUp.entity.Product;
-import com.onilicious.EcommerceStartUp.entity.User;
+import com.onilicious.EcommerceStartUp.entity.*;
 import com.onilicious.EcommerceStartUp.repository.OrderItemRepository;
 import com.onilicious.EcommerceStartUp.repository.OrderRepository;
 import com.onilicious.EcommerceStartUp.repository.ProductRepository;
@@ -61,7 +58,7 @@ public class OrderService {
         Order order = new Order();
         order.setUser(user);
         order.setCreatedAt(LocalDateTime.now());
-        order.setStatus("PENDING");
+        order.setStatus(OrderStatus.PENDING);
         order = orderRepo.save(order);
 
         List<OrderItem> savedItems = new ArrayList<>();
@@ -71,7 +68,7 @@ public class OrderService {
 
                 OrderItem item = new OrderItem();
                 item.setOrder(order);
-                item.setProduct(product);
+                item.setProductId(product.getId());
                 if(itemReq.getQuantity() != null) {
                     item.setQuantity(itemReq.getQuantity());
                 }
@@ -103,7 +100,7 @@ public class OrderService {
     /*
      * Update order status
      */
-    public Order updateOrderStatus(Long orderId, String status) {
+    public Order updateOrderStatus(Long orderId, OrderStatus status) {
         Order order = getOrder(orderId);
         order.setStatus(status);
         return orderRepo.save(order);

@@ -2,6 +2,7 @@ package com.onilicious.EcommerceStartUp.controller;
 
 import com.onilicious.EcommerceStartUp.dto.OrderRequestDTO;
 import com.onilicious.EcommerceStartUp.entity.Order;
+import com.onilicious.EcommerceStartUp.entity.OrderStatus;
 import com.onilicious.EcommerceStartUp.service.OrderService;
 import org.aspectj.weaver.ast.Or;
 import org.springframework.http.HttpStatus;
@@ -50,7 +51,7 @@ public class OrderController {
      * Update order
      */
     @PutMapping("/{orderId}/status")
-    public ResponseEntity<Order> updateOrderStatus(@PathVariable Long orderId, @RequestParam String status) {
+    public ResponseEntity<Order> updateOrderStatus(@PathVariable Long orderId, @RequestParam OrderStatus status) {
         return ResponseEntity.ok(orderService.updateOrderStatus(orderId, status));
     }
 
