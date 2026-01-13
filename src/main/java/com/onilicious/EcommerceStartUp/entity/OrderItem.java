@@ -26,5 +26,6 @@ public class OrderItem {
 
     private Integer quantity;
 
+    @Column(name = "price")
     private BigDecimal priceAtPurchase;
 }
