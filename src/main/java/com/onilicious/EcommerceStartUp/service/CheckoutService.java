@@ -54,7 +54,7 @@ public class CheckoutService {
             orderItem.setOrder(order);
             orderItem.setProduct(cartItem.getProduct());
             orderItem.setQuantity(cartItem.getQuantity());
-            orderItem.setPrice(cartItem.getProduct().getPrice());
+            orderItem.setPriceAtPurchase(cartItem.getProduct().getPrice());
             orderItemRepo.save(orderItem);
         }
 
