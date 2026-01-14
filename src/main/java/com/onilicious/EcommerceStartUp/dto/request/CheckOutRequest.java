@@ -1,4 +1,4 @@
-package com.onilicious.EcommerceStartUp.dto;
+package com.onilicious.EcommerceStartUp.dto.request;
 
 import jakarta.validation.constraints.NotNull;
 
