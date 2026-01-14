@@ -1,13 +1,11 @@
 package com.onilicious.EcommerceStartUp.controller;
 
-import com.onilicious.EcommerceStartUp.dto.OrderRequestDTO;
+import com.onilicious.EcommerceStartUp.dto.request.OrderRequestDTO;
 import com.onilicious.EcommerceStartUp.entity.Order;
 import com.onilicious.EcommerceStartUp.entity.OrderStatus;
 import com.onilicious.EcommerceStartUp.service.OrderService;
-import org.aspectj.weaver.ast.Or;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

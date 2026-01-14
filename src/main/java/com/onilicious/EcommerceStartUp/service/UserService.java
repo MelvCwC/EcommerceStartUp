@@ -2,7 +2,6 @@ package com.onilicious.EcommerceStartUp.service;
 
 import com.onilicious.EcommerceStartUp.entity.User;
 import com.onilicious.EcommerceStartUp.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

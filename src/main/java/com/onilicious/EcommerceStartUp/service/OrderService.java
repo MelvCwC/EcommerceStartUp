@@ -1,7 +1,7 @@
 package com.onilicious.EcommerceStartUp.service;
 
-import com.onilicious.EcommerceStartUp.dto.OrderItemRequestDTO;
-import com.onilicious.EcommerceStartUp.dto.OrderRequestDTO;
+import com.onilicious.EcommerceStartUp.dto.request.OrderItemRequestDTO;
+import com.onilicious.EcommerceStartUp.dto.request.OrderRequestDTO;
 import com.onilicious.EcommerceStartUp.entity.*;
 import com.onilicious.EcommerceStartUp.repository.OrderItemRepository;
 import com.onilicious.EcommerceStartUp.repository.OrderRepository;

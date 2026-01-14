@@ -1,8 +1,7 @@
-package com.onilicious.EcommerceStartUp.dto;
+package com.onilicious.EcommerceStartUp.dto.response;
 
 import com.onilicious.EcommerceStartUp.entity.Order;
 import com.onilicious.EcommerceStartUp.entity.OrderStatus;
-import org.aspectj.weaver.ast.Or;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
