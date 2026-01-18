@@ -1,5 +1,7 @@
 package com.onilicious.EcommerceStartUp.service;
 
+import com.onilicious.EcommerceStartUp.dto.request.UserRegisterRequestDTO;
+import com.onilicious.EcommerceStartUp.dto.request.UserUpdateRequestDTO;
 import com.onilicious.EcommerceStartUp.entity.User;
 import com.onilicious.EcommerceStartUp.repository.UserRepository;
 import org.springframework.stereotype.Service;
@@ -17,10 +19,17 @@ public class UserService {
     }
 
     //Register new user
-    public User createUser(User user) {
-        if(userRepo.existsByEmail(user.getEmail())) {
+    //We will be using DTOs if not client can send fields that I do not want like roles, id and risk exposing passwordHash
+    public User createUser(UserRegisterRequestDTO request) {
+        if(userRepo.existsByEmail(request.getEmail())) {
             throw new RuntimeException("Email is already taken");
         }
+        User user = new User();
+        user.setUsername(request.getUsername());
+        user.setEmail(request.getEmail());
+        //TODO NOTE: hashing will be added later with spring security
+        user.setPasswordHash(request.getPassword());
+        user.setRole("USER");
         return userRepo.save(user);
     }
 
@@ -35,11 +44,17 @@ public class UserService {
     }
 
     //Update user
-    public User updateUser(Long id, User updatedUser) {
+    public User updateUser(Long id, UserUpdateRequestDTO request) {
         User existingUser = getUserById(id);
-        existingUser.setUsername(updatedUser.getUsername());
-        existingUser.setPasswordHash(updatedUser.getPasswordHash());
-        existingUser.setRole(updatedUser.getRole());
+
+        if(request.getUsername() != null) {
+            existingUser.setUsername(request.getUsername());
+        }
+
+        if(request.getPassword() != null) {
+            existingUser.setPasswordHash(request.getPassword());
+        }
+
         return userRepo.save(existingUser);
     }
 
