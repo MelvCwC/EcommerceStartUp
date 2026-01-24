@@ -1,5 +1,6 @@
 package com.onilicious.EcommerceStartUp.service;
 
+import com.onilicious.EcommerceStartUp.dto.request.AddToCartRequestDTO;
 import com.onilicious.EcommerceStartUp.entity.Cart;
 import com.onilicious.EcommerceStartUp.entity.CartItem;
 import com.onilicious.EcommerceStartUp.entity.Product;
@@ -47,19 +48,19 @@ public class CartService {
     /*
      * Add a product to the user cart
      */
-    public Cart addItemToCart(Long userId, CartItem item) {
+    public Cart addItemToCart(Long userId, AddToCartRequestDTO request) {
         Cart cart = getOrCreateCart(userId);
-        Product product = productRepo.findById(item.getProduct().getId()).orElseThrow(() -> new RuntimeException("Product not found"));
+        Product product = productRepo.findById(request.getProductId()).orElseThrow(() -> new RuntimeException("Product not found"));
         CartItem existingItem = cartItemRepo.findByCartIdAndProductId(cart.getId(), product.getId());
 
         if(existingItem != null) {
-            existingItem.setQuantity(existingItem.getQuantity() + item.getQuantity());
+            existingItem.setQuantity(existingItem.getQuantity() + request.getQuantity());
             cartItemRepo.save(existingItem);
         } else {
             CartItem cartItem = new CartItem();
             cartItem.setCart(cart);
             cartItem.setProduct(product);
-            cartItem.setQuantity(item.getQuantity());
+            cartItem.setQuantity(request.getQuantity());
             cartItemRepo.save(cartItem);
         }
 
