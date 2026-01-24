@@ -1,6 +1,10 @@
 package com.onilicious.EcommerceStartUp.controller;
 
+import com.onilicious.EcommerceStartUp.dto.request.ProductCreateRequestDTO;
+import com.onilicious.EcommerceStartUp.dto.request.ProductUpdateRequestDTO;
+import com.onilicious.EcommerceStartUp.dto.response.ProductResponseDTO;
 import com.onilicious.EcommerceStartUp.entity.Product;
+import com.onilicious.EcommerceStartUp.mapper.ProductMapper;
 import com.onilicious.EcommerceStartUp.service.ProductService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,49 +25,51 @@ public class ProductController {
      * Get all product
      */
     @GetMapping
-    public List<Product> getAllProducts() {
-        return productService.getAllProduct();
+    public List<ProductResponseDTO> getAllProducts() {
+        return productService.getAllProduct().stream().map(ProductMapper::toResponse).toList();
     }
 
     /*
      * Get product by id
      */
     @GetMapping("/{id}")
-    public ResponseEntity<Product> getProductById(@PathVariable Long id) {
-        return ResponseEntity.ok(productService.getProductById(id));
+    public ResponseEntity<ProductResponseDTO> getProductById(@PathVariable Long id) {
+        Product product = productService.getProductById(id);
+        return ResponseEntity.ok(ProductMapper.toResponse(product));
     }
 
     /*
      * Get products by name
      */
     @GetMapping("/name/{name}")
-    public List<Product> getProductByName(@PathVariable String name) {
-        return productService.getProductByName(name);
+    public List<ProductResponseDTO> getProductByName(@PathVariable String name) {
+        return productService.getProductByName(name).stream().map(ProductMapper::toResponse).toList();
     }
 
     /*
      * Get products by category
      */
     @GetMapping("/category/{category}")
-    public List<Product> getProductByCategory(@PathVariable String category) {
-        return productService.getProductByCategory(category);
+    public List<ProductResponseDTO> getProductByCategory(@PathVariable String category) {
+        return productService.getProductByCategory(category).stream().map(ProductMapper::toResponse).toList();
     }
 
     /*
      * Add product
      */
     @PostMapping
-    public ResponseEntity<Product> addProduct(@RequestBody Product product) {
-        return ResponseEntity.ok(productService.addProduct(product));
+    public ResponseEntity<ProductResponseDTO> createProduct(@RequestBody ProductCreateRequestDTO request) {
+        Product product = productService.createProduct(request);
+        return ResponseEntity.ok(ProductMapper.toResponse(product));
     }
 
     /*
      * Update product
      */
     @PutMapping("/{id}")
-    public ResponseEntity<Product> updateProduct(@PathVariable Long id, @RequestBody Product updateProduct) {
-        Product product = productService.updateProduct(id, updateProduct);
-        return ResponseEntity.ok(product);
+    public ResponseEntity<ProductResponseDTO> updateProduct(@PathVariable Long id, @RequestBody ProductUpdateRequestDTO request) {
+        Product product = productService.updateProduct(id, request);
+        return ResponseEntity.ok(ProductMapper.toResponse(product));
     }
 
     /*

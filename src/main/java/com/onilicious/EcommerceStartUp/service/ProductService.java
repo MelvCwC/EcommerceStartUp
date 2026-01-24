@@ -1,6 +1,9 @@
 package com.onilicious.EcommerceStartUp.service;
 
+import com.onilicious.EcommerceStartUp.dto.request.ProductCreateRequestDTO;
+import com.onilicious.EcommerceStartUp.dto.request.ProductUpdateRequestDTO;
 import com.onilicious.EcommerceStartUp.entity.Product;
+import com.onilicious.EcommerceStartUp.mapper.ProductMapper;
 import com.onilicious.EcommerceStartUp.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -38,17 +41,15 @@ public class ProductService {
     }
 
     //Add product
-    public Product addProduct(Product product) {
+    public Product createProduct(ProductCreateRequestDTO request) {
+        Product product = ProductMapper.toEntity(request);
         return productRepo.save(product);
     }
 
     //Update product
-    public Product updateProduct(Long id, Product updatedProduct) {
-        Product existingProduct = productRepo.findById(id).orElseThrow(() -> new RuntimeException("Product not found"));
-        existingProduct.setName(updatedProduct.getName());
-        existingProduct.setDescription(updatedProduct.getDescription());
-        existingProduct.setPrice(updatedProduct.getPrice());
-        existingProduct.setStockQuantity(updatedProduct.getStockQuantity());
+    public Product updateProduct(Long id, ProductUpdateRequestDTO request) {
+        Product existingProduct = getProductById(id);
+        ProductMapper.updateEntity(existingProduct, request);
 
         return productRepo.save(existingProduct);
     }
