@@ -2,13 +2,13 @@ package com.onilicious.EcommerceStartUp.dto.request;
 
 import jakarta.validation.constraints.NotNull;
 
-public class CheckOutRequest {
+public class CheckOutRequestDTO {
     @NotNull
     private Long userId;
 
-    public CheckOutRequest() {}
+    public CheckOutRequestDTO() {}
 
-    public CheckOutRequest(Long userId) {
+    public CheckOutRequestDTO(Long userId) {
         this.userId = userId;
     }
 

@@ -5,6 +5,7 @@ import com.onilicious.EcommerceStartUp.repository.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -49,14 +50,24 @@ public class CheckoutService {
         order.setCreatedAt(LocalDateTime.now());
         order = orderRepo.save(order);
 
+        BigDecimal total = BigDecimal.ZERO;
+
         for (CartItem cartItem : cartItems) {
             OrderItem orderItem = new OrderItem();
             orderItem.setOrder(order);
             orderItem.setProductId(cartItem.getProduct().getId());
+            orderItem.setProductName(cartItem.getProduct().getName());
             orderItem.setQuantity(cartItem.getQuantity());
             orderItem.setPriceAtPurchase(cartItem.getProduct().getPrice());
+
+            BigDecimal itemTotal = cartItem.getProduct().getPrice().multiply(BigDecimal.valueOf(cartItem.getQuantity()));
+            total = total.add(itemTotal);
+
             orderItemRepo.save(orderItem);
         }
+
+        order.setTotal(total);
+        orderRepo.save(order);
 
         cartItemRepo.deleteByCartId(cart.getId());
 

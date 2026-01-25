@@ -10,6 +10,7 @@ import com.onilicious.EcommerceStartUp.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,25 +34,6 @@ public class OrderService {
     /*
      * Create order
      */
-//    public Order createOrder(Long userId, List<OrderItem> items) {
-//        User user = userRepo.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
-//
-//        Order order = new Order();
-//        order.setUser(user);
-//        order.setCreatedAt(LocalDateTime.now());
-//        order.setStatus("PENDING");
-//        order = orderRepo.save(order);
-//
-//        for(OrderItem item : items) {
-//            Product product = productRepo.findById(item.getProduct().getId()).orElseThrow(() -> new RuntimeException("Product not found"));
-//            item.setOrder(order);
-//            item.setProduct(product);
-//            orderItemRepo.save(item);
-//        }
-//
-//        order.setItems(items);
-//        return order;
-//    }
     public Order createOrder(OrderRequestDTO request) {
         User user = userRepo.findById(request.getUserId()).orElseThrow(() -> new RuntimeException("User not found"));
 
@@ -59,9 +41,11 @@ public class OrderService {
         order.setUser(user);
         order.setCreatedAt(LocalDateTime.now());
         order.setStatus(OrderStatus.PENDING);
+
         order = orderRepo.save(order);
 
-        List<OrderItem> savedItems = new ArrayList<>();
+        BigDecimal total = BigDecimal.ZERO;
+        List<OrderItem> orderItems = new ArrayList<>();
         if(request.getItems() != null) {
             for(OrderItemRequestDTO itemReq : request.getItems()) {
                 Product product = productRepo.findById(itemReq.getProductId()).orElseThrow(() -> new RuntimeException("Product not found"));
@@ -69,16 +53,21 @@ public class OrderService {
                 OrderItem item = new OrderItem();
                 item.setOrder(order);
                 item.setProductId(product.getId());
+                item.setProductName(product.getName());
+                item.setPriceAtPurchase(product.getPrice());
                 if(itemReq.getQuantity() != null) {
                     item.setQuantity(itemReq.getQuantity());
+                    BigDecimal itemTotal = product.getPrice().multiply(BigDecimal.valueOf(itemReq.getQuantity()));
+                    total = total.add(itemTotal);
                 }
 
                 orderItemRepo.save(item);
-                savedItems.add(item);
+                orderItems.add(item);
             }
         }
-        order.setItems(savedItems);
-        return order;
+        order.setItems(orderItems);
+        order.setTotal(total);
+        return orderRepo.save(order);
     }
 
     /*
