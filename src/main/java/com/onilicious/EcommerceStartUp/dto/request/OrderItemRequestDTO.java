@@ -8,10 +8,11 @@ import lombok.Setter;
 @Getter
 @Setter
 public class OrderItemRequestDTO {
-    @NotNull
+
+    @NotNull(message = "Product ID is required")
     private Long productId;
 
-    @NotNull
-    @Min(1)
+    @NotNull(message = "Quantity is required")
+    @Min(value = 1, message = "Quantity must be at least 1")
     private Integer quantity;
 }

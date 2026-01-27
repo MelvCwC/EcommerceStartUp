@@ -1,5 +1,6 @@
 package com.onilicious.EcommerceStartUp.dto.request;
 
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -10,9 +11,11 @@ import java.util.List;
 @Getter
 @Setter
 public class OrderRequestDTO {
-    @NotNull
+
+    @NotNull(message = "User ID is required")
     private Long userId;
 
-    @NotEmpty
+    @NotEmpty(message = "Order must contain at least 1 item")
+    @Valid
     private List<OrderItemRequestDTO> items;
 }
