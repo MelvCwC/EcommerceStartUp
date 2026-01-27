@@ -3,6 +3,9 @@ package com.onilicious.EcommerceStartUp.service;
 import com.onilicious.EcommerceStartUp.dto.request.OrderItemRequestDTO;
 import com.onilicious.EcommerceStartUp.dto.request.OrderRequestDTO;
 import com.onilicious.EcommerceStartUp.entity.*;
+import com.onilicious.EcommerceStartUp.exception.BadRequestException;
+import com.onilicious.EcommerceStartUp.exception.ConflictException;
+import com.onilicious.EcommerceStartUp.exception.ResourceNotFoundException;
 import com.onilicious.EcommerceStartUp.repository.OrderItemRepository;
 import com.onilicious.EcommerceStartUp.repository.OrderRepository;
 import com.onilicious.EcommerceStartUp.repository.ProductRepository;
@@ -35,7 +38,7 @@ public class OrderService {
      * Create order
      */
     public Order createOrder(OrderRequestDTO request) {
-        User user = userRepo.findById(request.getUserId()).orElseThrow(() -> new RuntimeException("User not found"));
+        User user = userRepo.findById(request.getUserId()).orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
         Order order = new Order();
         order.setUser(user);
@@ -48,7 +51,7 @@ public class OrderService {
         List<OrderItem> orderItems = new ArrayList<>();
         if(request.getItems() != null) {
             for(OrderItemRequestDTO itemReq : request.getItems()) {
-                Product product = productRepo.findById(itemReq.getProductId()).orElseThrow(() -> new RuntimeException("Product not found"));
+                Product product = productRepo.findById(itemReq.getProductId()).orElseThrow(() -> new ResourceNotFoundException("Product not found"));
 
                 OrderItem item = new OrderItem();
                 item.setOrder(order);
@@ -83,14 +86,23 @@ public class OrderService {
      */
     @Transactional(readOnly = true)
     public Order getOrder(Long orderId) {
-        return orderRepo.findById(orderId).orElseThrow(() -> new RuntimeException("Order not found"));
+        return orderRepo.findById(orderId).orElseThrow(() -> new ResourceNotFoundException("Order not found"));
     }
 
     /*
      * Update order status
      */
     public Order updateOrderStatus(Long orderId, OrderStatus status) {
+        if(status == null) {
+            throw new BadRequestException("Order Status cannot be null");
+        }
+
         Order order = getOrder(orderId);
+
+        if(order.getStatus() == OrderStatus.CANCELLED) {
+            throw new ConflictException("Cannot update a cancelled order");
+        }
+
         order.setStatus(status);
         return orderRepo.save(order);
     }

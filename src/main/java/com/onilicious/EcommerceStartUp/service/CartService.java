@@ -5,6 +5,9 @@ import com.onilicious.EcommerceStartUp.entity.Cart;
 import com.onilicious.EcommerceStartUp.entity.CartItem;
 import com.onilicious.EcommerceStartUp.entity.Product;
 import com.onilicious.EcommerceStartUp.entity.User;
+import com.onilicious.EcommerceStartUp.exception.BadRequestException;
+import com.onilicious.EcommerceStartUp.exception.ConflictException;
+import com.onilicious.EcommerceStartUp.exception.ResourceNotFoundException;
 import com.onilicious.EcommerceStartUp.repository.CartRepository;
 import com.onilicious.EcommerceStartUp.repository.CartitemRepository;
 import com.onilicious.EcommerceStartUp.repository.ProductRepository;
@@ -38,7 +41,7 @@ public class CartService {
      */
     public Cart getOrCreateCart(Long userId) {
         return cartRepo.findByUserId(userId).orElseGet(() -> {
-            User user = userRepo.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+            User user = userRepo.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User not found"));
             Cart cart = new Cart();
             cart.setUser(user);
             return cartRepo.save(cart);
@@ -50,7 +53,7 @@ public class CartService {
      */
     public Cart addItemToCart(Long userId, AddToCartRequestDTO request) {
         Cart cart = getOrCreateCart(userId);
-        Product product = productRepo.findById(request.getProductId()).orElseThrow(() -> new RuntimeException("Product not found"));
+        Product product = productRepo.findById(request.getProductId()).orElseThrow(() -> new ResourceNotFoundException("Product not found"));
         CartItem existingItem = cartItemRepo.findByCartIdAndProductId(cart.getId(), product.getId());
 
         if(existingItem != null) {
@@ -73,14 +76,15 @@ public class CartService {
     public Cart updateCartItem(Long userId, Long itemId, int quantity) {
         Cart cart = getOrCreateCart(userId);
 
-        CartItem cartItem = cartItemRepo.findById(itemId).orElseThrow(() -> new RuntimeException("Cart item not found"));
+        CartItem cartItem = cartItemRepo.findById(itemId).orElseThrow(() -> new ResourceNotFoundException("Cart item not found"));
 
         if(!cartItem.getCart().getId().equals(cart.getId())) {
-            throw new RuntimeException("Cart item does not belong to user's cart");
+            throw new ConflictException("Cart item does not belong to user's cart");
         }
 
         if(quantity <= 0) {
             cartItemRepo.delete(cartItem);
+            throw new BadRequestException("Quantity must be greater than 0");
         } else {
             cartItem.setQuantity(quantity);
             cartItemRepo.save(cartItem);

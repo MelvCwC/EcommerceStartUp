@@ -3,6 +3,8 @@ package com.onilicious.EcommerceStartUp.service;
 import com.onilicious.EcommerceStartUp.dto.request.UserRegisterRequestDTO;
 import com.onilicious.EcommerceStartUp.dto.request.UserUpdateRequestDTO;
 import com.onilicious.EcommerceStartUp.entity.User;
+import com.onilicious.EcommerceStartUp.exception.ConflictException;
+import com.onilicious.EcommerceStartUp.exception.ResourceNotFoundException;
 import com.onilicious.EcommerceStartUp.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
@@ -22,7 +24,7 @@ public class UserService {
     //We will be using DTOs if not client can send fields that I do not want like roles, id and risk exposing passwordHash
     public User createUser(UserRegisterRequestDTO request) {
         if(userRepo.existsByEmail(request.getEmail())) {
-            throw new RuntimeException("Email is already taken");
+            throw new ConflictException("Email is already taken");
         }
         User user = new User();
         user.setUsername(request.getUsername());
@@ -40,7 +42,7 @@ public class UserService {
 
     //Find user by id
     public User getUserById(Long id) {
-        return userRepo.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
+        return userRepo.findById(id).orElseThrow(() -> new ResourceNotFoundException("User not found"));
     }
 
     //Update user
@@ -61,7 +63,7 @@ public class UserService {
     //Delete user
     public void deleteUser(Long id) {
         if(!userRepo.existsById(id)) {
-            throw new RuntimeException("User not found");
+            throw new ResourceNotFoundException("User not found");
         }
 
         userRepo.deleteById(id);

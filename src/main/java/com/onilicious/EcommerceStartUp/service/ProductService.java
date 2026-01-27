@@ -3,6 +3,7 @@ package com.onilicious.EcommerceStartUp.service;
 import com.onilicious.EcommerceStartUp.dto.request.ProductCreateRequestDTO;
 import com.onilicious.EcommerceStartUp.dto.request.ProductUpdateRequestDTO;
 import com.onilicious.EcommerceStartUp.entity.Product;
+import com.onilicious.EcommerceStartUp.exception.ResourceNotFoundException;
 import com.onilicious.EcommerceStartUp.mapper.ProductMapper;
 import com.onilicious.EcommerceStartUp.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +38,7 @@ public class ProductService {
 
     //Get product by Id
     public Product getProductById(Long id) {
-        return productRepo.findById(id).orElseThrow(() -> new RuntimeException("Product not found"));
+        return productRepo.findById(id).orElseThrow(() -> new ResourceNotFoundException("Product not found"));
     }
 
     //Add product

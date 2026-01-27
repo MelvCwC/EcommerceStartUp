@@ -1,6 +1,8 @@
 package com.onilicious.EcommerceStartUp.service;
 
 import com.onilicious.EcommerceStartUp.entity.*;
+import com.onilicious.EcommerceStartUp.exception.BadRequestException;
+import com.onilicious.EcommerceStartUp.exception.ResourceNotFoundException;
 import com.onilicious.EcommerceStartUp.repository.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,14 +37,14 @@ public class CheckoutService {
      *  - Clear cart
      */
     public Order checkout(Long userId) {
-        Cart cart = cartRepo.findByUserId(userId).orElseThrow(() -> new RuntimeException("Cart not found"));
+        Cart cart = cartRepo.findByUserId(userId).orElseThrow(() -> new ResourceNotFoundException("Cart not found"));
 
         List<CartItem> cartItems = cartItemRepo.findByCartId(cart.getId());
         if(cartItems.isEmpty()) {
-            throw new RuntimeException("Cart is empty");
+            throw new BadRequestException("Cart is empty");
         }
 
-        User user = userRepo.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+        User user = userRepo.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
         Order order = new Order();
         order.setUser(user);
