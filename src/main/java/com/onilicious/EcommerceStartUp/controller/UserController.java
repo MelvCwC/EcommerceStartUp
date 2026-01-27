@@ -6,6 +6,7 @@ import com.onilicious.EcommerceStartUp.dto.response.UserResponseDTO;
 import com.onilicious.EcommerceStartUp.entity.User;
 import com.onilicious.EcommerceStartUp.mapper.UserMapper;
 import com.onilicious.EcommerceStartUp.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -42,7 +43,7 @@ public class UserController {
      * Create user
      */
     @PostMapping("/register")
-    public ResponseEntity<UserResponseDTO> createUser(@RequestBody UserRegisterRequestDTO request) {
+    public ResponseEntity<UserResponseDTO> createUser(@Valid @RequestBody UserRegisterRequestDTO request) {
         //@RequestBody will take JSON data from HTTP request body and convert it into a Java object and give it to the method
         User savedUser = userService.createUser(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(UserMapper.toResponse(savedUser));
@@ -52,7 +53,7 @@ public class UserController {
      * Update user
      */
     @PutMapping("/{id}")
-    public ResponseEntity<UserResponseDTO> updateUser(@PathVariable Long id, @RequestBody UserUpdateRequestDTO request) {
+    public ResponseEntity<UserResponseDTO> updateUser(@PathVariable Long id, @Valid @RequestBody UserUpdateRequestDTO request) {
         User updatedUser = userService.updateUser(id, request);
         return ResponseEntity.ok(UserMapper.toResponse(updatedUser));
     }

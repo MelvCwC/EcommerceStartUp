@@ -6,6 +6,7 @@ import com.onilicious.EcommerceStartUp.entity.Order;
 import com.onilicious.EcommerceStartUp.entity.OrderStatus;
 import com.onilicious.EcommerceStartUp.mapper.OrderMapper;
 import com.onilicious.EcommerceStartUp.service.OrderService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -45,7 +46,7 @@ public class OrderController {
      * Create order
      */
     @PostMapping("/")
-    public ResponseEntity<OrderResponseDTO> createOrder(@RequestBody OrderRequestDTO request) {
+    public ResponseEntity<OrderResponseDTO> createOrder(@Valid @RequestBody OrderRequestDTO request) {
         Order createdOrder = orderService.createOrder(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(OrderMapper.toResponse(createdOrder));
     }
@@ -54,7 +55,7 @@ public class OrderController {
      * Update order
      */
     @PutMapping("/{orderId}/status")
-    public ResponseEntity<OrderResponseDTO> updateOrderStatus(@PathVariable Long orderId, @RequestParam OrderStatus status) {
+    public ResponseEntity<OrderResponseDTO> updateOrderStatus(@PathVariable Long orderId, @Valid @RequestParam OrderStatus status) {
         Order order = orderService.updateOrderStatus(orderId, status);
         return ResponseEntity.ok(OrderMapper.toResponse(order));
     }

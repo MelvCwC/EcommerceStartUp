@@ -6,6 +6,7 @@ import com.onilicious.EcommerceStartUp.dto.response.ProductResponseDTO;
 import com.onilicious.EcommerceStartUp.entity.Product;
 import com.onilicious.EcommerceStartUp.mapper.ProductMapper;
 import com.onilicious.EcommerceStartUp.service.ProductService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -58,7 +59,7 @@ public class ProductController {
      * Add product
      */
     @PostMapping
-    public ResponseEntity<ProductResponseDTO> createProduct(@RequestBody ProductCreateRequestDTO request) {
+    public ResponseEntity<ProductResponseDTO> createProduct(@Valid @RequestBody ProductCreateRequestDTO request) {
         Product product = productService.createProduct(request);
         return ResponseEntity.ok(ProductMapper.toResponse(product));
     }
@@ -67,7 +68,7 @@ public class ProductController {
      * Update product
      */
     @PutMapping("/{id}")
-    public ResponseEntity<ProductResponseDTO> updateProduct(@PathVariable Long id, @RequestBody ProductUpdateRequestDTO request) {
+    public ResponseEntity<ProductResponseDTO> updateProduct(@PathVariable Long id, @Valid @RequestBody ProductUpdateRequestDTO request) {
         Product product = productService.updateProduct(id, request);
         return ResponseEntity.ok(ProductMapper.toResponse(product));
     }

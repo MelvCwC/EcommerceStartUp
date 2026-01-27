@@ -7,6 +7,7 @@ import com.onilicious.EcommerceStartUp.entity.Cart;
 import com.onilicious.EcommerceStartUp.entity.CartItem;
 import com.onilicious.EcommerceStartUp.mapper.CartMapper;
 import com.onilicious.EcommerceStartUp.service.CartService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,7 +34,7 @@ public class CartController {
      * Add item to cart
      */
     @PostMapping("/{userId}/add")
-    public ResponseEntity<CartResponseDTO> addItemTocart(@PathVariable Long userId, @RequestBody AddToCartRequestDTO request) {
+    public ResponseEntity<CartResponseDTO> addItemTocart(@PathVariable Long userId, @Valid @RequestBody AddToCartRequestDTO request) {
         Cart cart = cartService.addItemToCart(userId, request);
         return ResponseEntity.ok(CartMapper.toResponse(cart));
     }
@@ -42,7 +43,7 @@ public class CartController {
      * Update quantity of cart item
      */
     @PutMapping("/{userId}/update/{itemId}")
-    public ResponseEntity<CartResponseDTO> updateCartItem(@PathVariable Long userId, @PathVariable Long itemId, @RequestBody UpdateCartItemRequestDTO request) {
+    public ResponseEntity<CartResponseDTO> updateCartItem(@PathVariable Long userId, @PathVariable Long itemId, @Valid @RequestBody UpdateCartItemRequestDTO request) {
         Cart updatedCart = cartService.updateCartItem(userId, itemId, request.getQuantity());
         return ResponseEntity.ok(CartMapper.toResponse(updatedCart));
     }

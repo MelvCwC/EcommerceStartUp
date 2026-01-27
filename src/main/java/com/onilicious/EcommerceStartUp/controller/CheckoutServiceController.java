@@ -5,6 +5,7 @@ import com.onilicious.EcommerceStartUp.dto.response.OrderResponseDTO;
 import com.onilicious.EcommerceStartUp.entity.Order;
 import com.onilicious.EcommerceStartUp.mapper.OrderMapper;
 import com.onilicious.EcommerceStartUp.service.CheckoutService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,7 +23,7 @@ public class CheckoutServiceController {
      * Checkout using @RequestParam for a simple userId
      */
     @PostMapping
-    public ResponseEntity<OrderResponseDTO> checkOut(@RequestBody CheckOutRequestDTO request) {
+    public ResponseEntity<OrderResponseDTO> checkOut(@Valid @RequestBody CheckOutRequestDTO request) {
         Order order = checkOutService.checkout(request.getUserId());
         return ResponseEntity.status(HttpStatus.CREATED).body(OrderMapper.toResponse(order));
     }
