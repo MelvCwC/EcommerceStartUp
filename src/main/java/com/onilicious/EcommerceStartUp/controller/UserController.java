@@ -45,7 +45,7 @@ public class UserController {
     @PostMapping("/register")
     public ResponseEntity<UserResponseDTO> createUser(@Valid @RequestBody UserRegisterRequestDTO request) {
         //@RequestBody will take JSON data from HTTP request body and convert it into a Java object and give it to the method
-        User savedUser = userService.createUser(request);
+        User savedUser = userService.registerUser(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(UserMapper.toResponse(savedUser));
     }
 

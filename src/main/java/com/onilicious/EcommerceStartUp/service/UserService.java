@@ -7,6 +7,7 @@ import com.onilicious.EcommerceStartUp.entity.User;
 import com.onilicious.EcommerceStartUp.exception.ConflictException;
 import com.onilicious.EcommerceStartUp.exception.ResourceNotFoundException;
 import com.onilicious.EcommerceStartUp.repository.UserRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,22 +16,24 @@ import java.util.List;
 public class UserService {
 
     private final UserRepository userRepo;
+    private final PasswordEncoder passwordEncoder;
 
     //Constructor inject dependencies
-    public UserService(UserRepository userRepo) {
+    public UserService(UserRepository userRepo, PasswordEncoder passwordEncoder) {
         this.userRepo = userRepo;
+        this.passwordEncoder = passwordEncoder;
     }
 
     //Register new user
     //We will be using DTOs if not client can send fields that I do not want like roles, id and risk exposing passwordHash
-    public User createUser(UserRegisterRequestDTO request) {
+    public User registerUser(UserRegisterRequestDTO request) {
         if(userRepo.existsByEmail(request.getEmail())) {
             throw new ConflictException("Email is already taken");
         }
         User user = new User();
         user.setUsername(request.getUsername());
         user.setEmail(request.getEmail());
-        //TODO NOTE: hashing will be added later with spring security
+        request.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setPasswordHash(request.getPassword());
         user.setRole(Role.USER);
         return userRepo.save(user);

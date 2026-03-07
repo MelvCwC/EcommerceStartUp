@@ -1,5 +1,6 @@
 package com.onilicious.EcommerceStartUp.dto.response;
 
+import com.onilicious.EcommerceStartUp.entity.Role;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,6 +12,6 @@ public class UserResponseDTO {
     private Long id;
     private String username;
     private String email;
-    private String role;
+    private Role role;
     private LocalDateTime createdAt;
 }
