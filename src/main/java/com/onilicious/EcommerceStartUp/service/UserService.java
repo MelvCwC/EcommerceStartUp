@@ -2,6 +2,7 @@ package com.onilicious.EcommerceStartUp.service;
 
 import com.onilicious.EcommerceStartUp.dto.request.UserRegisterRequestDTO;
 import com.onilicious.EcommerceStartUp.dto.request.UserUpdateRequestDTO;
+import com.onilicious.EcommerceStartUp.entity.Role;
 import com.onilicious.EcommerceStartUp.entity.User;
 import com.onilicious.EcommerceStartUp.exception.ConflictException;
 import com.onilicious.EcommerceStartUp.exception.ResourceNotFoundException;
@@ -31,7 +32,7 @@ public class UserService {
         user.setEmail(request.getEmail());
         //TODO NOTE: hashing will be added later with spring security
         user.setPasswordHash(request.getPassword());
-        user.setRole("USER");
+        user.setRole(Role.USER);
         return userRepo.save(user);
     }
 

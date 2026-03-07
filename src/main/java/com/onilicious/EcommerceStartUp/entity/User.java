@@ -24,7 +24,8 @@ public class User {
     @Column(name = "password_hash")
     private String passwordHash;
 
-    private String role;
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt = LocalDateTime.now();
