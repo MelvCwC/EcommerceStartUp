@@ -49,6 +49,11 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body(UserMapper.toResponse(savedUser));
     }
 
+    @PostMapping("/login")
+    public ResponseEntity<String> login(@Valid @RequestBody UserRegisterRequestDTO request) {
+        return ResponseEntity.ok("Success");
+    }
+
     /*
      * Update user
      */

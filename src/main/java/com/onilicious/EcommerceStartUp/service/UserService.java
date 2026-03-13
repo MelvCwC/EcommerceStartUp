@@ -7,6 +7,9 @@ import com.onilicious.EcommerceStartUp.entity.User;
 import com.onilicious.EcommerceStartUp.exception.ConflictException;
 import com.onilicious.EcommerceStartUp.exception.ResourceNotFoundException;
 import com.onilicious.EcommerceStartUp.repository.UserRepository;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -17,11 +20,15 @@ public class UserService {
 
     private final UserRepository userRepo;
     private final PasswordEncoder passwordEncoder;
+    private final AuthenticationManager authenticationManager;
+    private final JWTService jwtService;
 
     //Constructor inject dependencies
-    public UserService(UserRepository userRepo, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepo, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager, JWTService jwtService) {
         this.userRepo = userRepo;
         this.passwordEncoder = passwordEncoder;
+        this.authenticationManager = authenticationManager;
+        this.jwtService = jwtService;
     }
 
     //Register new user
@@ -34,7 +41,7 @@ public class UserService {
         user.setUsername(request.getUsername());
         user.setEmail(request.getEmail());
         request.setPassword(passwordEncoder.encode(request.getPassword()));
-        user.setPasswordHash(request.getPassword());
+        user.setPassword(request.getPassword());
         user.setRole(Role.USER);
         return userRepo.save(user);
     }
@@ -58,10 +65,22 @@ public class UserService {
         }
 
         if(request.getPassword() != null) {
-            existingUser.setPasswordHash(request.getPassword());
+            existingUser.setPassword(request.getPassword());
         }
 
         return userRepo.save(existingUser);
+    }
+
+    //Verify user
+    public String verify(User user) {
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
+
+        if(authentication.isAuthenticated()) {
+            return jwtService.generateToken(user.getUsername()); // JWT TOKEN
+        }
+
+        return "Fail";
     }
 
     //Delete user

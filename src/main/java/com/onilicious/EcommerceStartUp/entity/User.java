@@ -22,7 +22,7 @@ public class User {
     private String email;
 
     @Column(name = "password_hash")
-    private String passwordHash;
+    private String password;
 
     @Enumerated(EnumType.STRING)
     private Role role;
