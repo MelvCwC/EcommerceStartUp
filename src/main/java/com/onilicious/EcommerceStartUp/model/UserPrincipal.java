@@ -14,7 +14,7 @@ public class UserPrincipal implements UserDetails {
      * Spring Security can only understand UserDetails so we will need to wrap the User entity class inside User Principal which implements UserDetails
      */
 
-    private User user;
+    private final User user;
 
     public UserPrincipal(User user) {
         this.user = user;
@@ -22,7 +22,7 @@ public class UserPrincipal implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(user.getRole().name()));
+        return List.of(new SimpleGrantedAuthority("ROLE_" + user.getRole().name()));
     }
 
     @Override
