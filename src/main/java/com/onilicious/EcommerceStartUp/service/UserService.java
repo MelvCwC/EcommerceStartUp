@@ -1,10 +1,7 @@
 package com.onilicious.EcommerceStartUp.service;
 
-import com.onilicious.EcommerceStartUp.dto.request.UserRegisterRequestDTO;
-import com.onilicious.EcommerceStartUp.dto.request.UserUpdateRequestDTO;
-import com.onilicious.EcommerceStartUp.entity.Role;
+import com.onilicious.EcommerceStartUp.dto.request.AuthUserUpdateRequestDTO;
 import com.onilicious.EcommerceStartUp.entity.User;
-import com.onilicious.EcommerceStartUp.exception.ConflictException;
 import com.onilicious.EcommerceStartUp.exception.ResourceNotFoundException;
 import com.onilicious.EcommerceStartUp.repository.UserRepository;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -31,21 +28,6 @@ public class UserService {
         this.jwtService = jwtService;
     }
 
-    //Register new user
-    //We will be using DTOs if not client can send fields that I do not want like roles, id and risk exposing passwordHash
-    public User registerUser(UserRegisterRequestDTO request) {
-        if(userRepo.existsByEmail(request.getEmail())) {
-            throw new ConflictException("Email is already taken");
-        }
-        User user = new User();
-        user.setUsername(request.getUsername());
-        user.setEmail(request.getEmail());
-        request.setPassword(passwordEncoder.encode(request.getPassword()));
-        user.setPassword(request.getPassword());
-        user.setRole(Role.USER);
-        return userRepo.save(user);
-    }
-
     //Return all users
     public List<User> getAllUser() {
         return userRepo.findAll();
@@ -56,8 +38,10 @@ public class UserService {
         return userRepo.findById(id).orElseThrow(() -> new ResourceNotFoundException("User not found"));
     }
 
-    //Update user
-    public User updateUser(Long id, UserUpdateRequestDTO request) {
+    /*
+     * Update user
+     */
+    public User updateUser(Long id, AuthUserUpdateRequestDTO request) {
         User existingUser = getUserById(id);
 
         if(request.getUsername() != null) {
@@ -65,22 +49,10 @@ public class UserService {
         }
 
         if(request.getPassword() != null) {
-            existingUser.setPassword(request.getPassword());
+            existingUser.setPassword(passwordEncoder.encode(request.getPassword()));
         }
 
         return userRepo.save(existingUser);
-    }
-
-    //Verify user
-    public String verify(User user) {
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
-
-        if(authentication.isAuthenticated()) {
-            return jwtService.generateToken(user.getUsername()); // JWT TOKEN
-        }
-
-        return "Fail";
     }
 
     //Delete user

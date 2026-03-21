@@ -1,6 +1,6 @@
 package com.onilicious.EcommerceStartUp.mapper;
 
-import com.onilicious.EcommerceStartUp.dto.request.UserRegisterRequestDTO;
+import com.onilicious.EcommerceStartUp.dto.request.AuthUserRequestDTO;
 import com.onilicious.EcommerceStartUp.dto.response.UserResponseDTO;
 import com.onilicious.EcommerceStartUp.entity.User;
 
@@ -12,7 +12,7 @@ import com.onilicious.EcommerceStartUp.entity.User;
 
 public class UserMapper {
 
-    public static User toEntity(UserRegisterRequestDTO dto) {
+    public static User toEntity(AuthUserRequestDTO dto) {
         User user = new User();
         user.setUsername(dto.getUsername());
         user.setEmail(dto.getEmail());

@@ -11,7 +11,7 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-public class UserRegisterRequestDTO {
+public class AuthUserRequestDTO {
 
     @NotBlank(message = "Username is required")
     private String username;

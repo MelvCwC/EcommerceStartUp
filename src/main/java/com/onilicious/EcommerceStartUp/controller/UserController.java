@@ -1,7 +1,7 @@
 package com.onilicious.EcommerceStartUp.controller;
 
-import com.onilicious.EcommerceStartUp.dto.request.UserRegisterRequestDTO;
-import com.onilicious.EcommerceStartUp.dto.request.UserUpdateRequestDTO;
+import com.onilicious.EcommerceStartUp.dto.request.AuthUserRequestDTO;
+import com.onilicious.EcommerceStartUp.dto.request.AuthUserUpdateRequestDTO;
 import com.onilicious.EcommerceStartUp.dto.response.UserResponseDTO;
 import com.onilicious.EcommerceStartUp.entity.User;
 import com.onilicious.EcommerceStartUp.mapper.UserMapper;
@@ -40,25 +40,10 @@ public class UserController {
     }
 
     /*
-     * Create user
-     */
-    @PostMapping("/register")
-    public ResponseEntity<UserResponseDTO> createUser(@Valid @RequestBody UserRegisterRequestDTO request) {
-        //@RequestBody will take JSON data from HTTP request body and convert it into a Java object and give it to the method
-        User savedUser = userService.registerUser(request);
-        return ResponseEntity.status(HttpStatus.CREATED).body(UserMapper.toResponse(savedUser));
-    }
-
-    @PostMapping("/login")
-    public ResponseEntity<String> login(@Valid @RequestBody UserRegisterRequestDTO request) {
-        return ResponseEntity.ok("Success");
-    }
-
-    /*
      * Update user
      */
     @PutMapping("/{id}")
-    public ResponseEntity<UserResponseDTO> updateUser(@PathVariable Long id, @Valid @RequestBody UserUpdateRequestDTO request) {
+    public ResponseEntity<UserResponseDTO> updateUser(@PathVariable Long id, @Valid @RequestBody AuthUserUpdateRequestDTO request) {
         User updatedUser = userService.updateUser(id, request);
         return ResponseEntity.ok(UserMapper.toResponse(updatedUser));
     }
