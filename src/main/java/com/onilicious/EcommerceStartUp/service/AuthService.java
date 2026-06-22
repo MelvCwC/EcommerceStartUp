@@ -1,17 +1,17 @@
 package com.onilicious.EcommerceStartUp.service;
 
 import com.onilicious.EcommerceStartUp.dto.request.AuthUserRequestDTO;
-import com.onilicious.EcommerceStartUp.dto.request.AuthUserUpdateRequestDTO;
 import com.onilicious.EcommerceStartUp.dto.response.AuthResponseDTO;
 import com.onilicious.EcommerceStartUp.entity.Role;
 import com.onilicious.EcommerceStartUp.entity.User;
 import com.onilicious.EcommerceStartUp.exception.ConflictException;
-import com.onilicious.EcommerceStartUp.filter.JwtFilter;
 import com.onilicious.EcommerceStartUp.repository.UserRepository;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
 
+@Service
 public class AuthService {
 
     private final UserService userService;
@@ -20,7 +20,7 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
 
-    public AuthService(UserService userService, JwtFilter jwtFilter, UserRepository userRepo, PasswordEncoder passwordEncoder,
+    public AuthService(UserService userService, UserRepository userRepo, PasswordEncoder passwordEncoder,
                        AuthenticationManager authenticationManager, JWTService jwtService) {
         this.userService = userService;
         this.userRepo = userRepo;
