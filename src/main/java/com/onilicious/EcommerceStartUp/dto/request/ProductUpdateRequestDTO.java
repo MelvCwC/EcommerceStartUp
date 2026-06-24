@@ -25,4 +25,6 @@ public class ProductUpdateRequestDTO {
 
     @NotBlank(message = "Category cannot be blank")
     private String category;
+
+    private String imageUrl;
 }

@@ -29,4 +29,7 @@ public class ProductCreateRequestDTO {
 
     @NotBlank(message = "Category is required")
     private String category;
+
+    @NotBlank(message = "Image Url is required!")
+    private String imageUrl;
 }

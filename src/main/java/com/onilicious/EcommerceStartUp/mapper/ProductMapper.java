@@ -14,6 +14,7 @@ public class ProductMapper {
         product.setPrice(request.getPrice());
         product.setStockQuantity(request.getStockQuantity());
         product.setCategory(request.getCategory());
+        product.setImageUrl(request.getImageUrl());
         return product;
     }
 
@@ -23,6 +24,7 @@ public class ProductMapper {
         if(request.getDescription() != null) { product.setDescription(request.getDescription()); }
         if(request.getStockQuantity() != null) { product.setStockQuantity(request.getStockQuantity()); }
         if(request.getPrice() != null) { product.setPrice(request.getPrice()); }
+        if(request.getImageUrl() != null) { product.setImageUrl(request.getImageUrl()); }
     }
 
     public static ProductResponseDTO toResponse(Product product) {
@@ -34,6 +36,7 @@ public class ProductMapper {
         response.setStockQuantity(product.getStockQuantity());
         response.setCreatedAt(product.getCreatedAt());
         response.setPrice(product.getPrice());
+        response.setImageUrl(product.getImageUrl());
         return response;
 
     }

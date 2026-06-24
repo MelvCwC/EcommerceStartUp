@@ -16,4 +16,5 @@ public class ProductResponseDTO {
     private Integer stockQuantity;
     private String category;
     private LocalDateTime createdAt;
+    private String imageUrl;
 }
